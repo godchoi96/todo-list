@@ -4,5 +4,5 @@ from . import views
 
 app_name = 'todo'
 urlpatterns = [
-    # path('', views.TDView.as_view(), name='index')
+    path('', views.TDView.as_view(), name='index')
 ]
