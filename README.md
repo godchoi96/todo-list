@@ -28,3 +28,17 @@ Vue.js - Django 연동 웹 프로그래밍 강의안 참고
 
 ## 📃 Dev Blog
 Not yet
+
+<hr>
+
+## ✔ Views ClassName
+1. api_CSR
+- 투두 리스트 생성: CreateAPIView
+- 투두 리스트 삭제: DeleteAPIView
+- 투두 리스트 보여주기: ListAPIView
+2. todo_SSR
+- TDView
+3. todo-list_SSR
+- HomeView
+
+<hr>
