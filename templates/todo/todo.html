@@ -55,20 +55,22 @@
 {% block content %}
     <div id='app'>
 
-        <h1>My Todo App !</h1>
+        <h2 class="mt-3 fw-bold">My Todo App !</h2>
+        <br>
         <strong>서로 할 일이나 의견을 공유해 봅시다.</strong>
         <br>
 
         <div class="inputBox">
-            <input class="name" type="text" placeholder="name ...">
-            <input class="item" type="text" placeholder="type anything welcomed ...">
-            <button>ADD</button>
+            <input class="name" type="text" placeholder="name ..." v-model.trim="name">
+            <input class="item" type="text" placeholder="type anything welcomed ..."
+                   v-model.trim="todo" v-on:keyup.enter="add_todo()">
+            <button v-on:click="add_todo()" class="btn btn-primary btn-sm ms-3">ADD</button>
         </div>
 
         <ul class="todoList">
-            <li v-for="(todoItem, index) in todoItems">
-                <span></span>
-                <span class="removeBtn">&#x00D7</span>
+            <li v-for="(todo, index) in todoList">
+                <span>[[ todo.name ]]:: [[ todo.todo ]]</span>
+                <span class="removeBtn" v-on:click="remove_todo(todo, index)">x</span>
             </li>
         </ul>
 
@@ -76,12 +78,47 @@
 {% endblock %}
 
 {% block extra-script %}
-    <script src='https://unpkg.com/vue/dist/vue.min.js'></script>
-    <script>
-        var vm = new Vue({
-            el: '#app',
-            data: {},
-            methods: {},
-        })
-    </script>
+<script src="https://unpkg.com/vue@3"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+Vue.createApp({
+    // compilerOptions: {
+    //     delimiters: ["[[", "]]"]
+    // },
+    delimiters: ["[[", "]]"],
+
+    data() {
+        return {
+            name: '',
+            todo: '',
+            todoList: [],
+        }
+    },
+    created: function () {
+        console.log("created()...");
+        this.fetch_all_todo();
+    },
+
+    methods: {
+        fetch_all_todo: function () {
+            console.log("fetch_all_todo()...");
+
+            var vm = this;
+            axios.get('/api/todo/list/')
+                .then(function (res) {
+                    console.log("GET RES", res);
+                    // res.data.reverse();
+                    // console.log(res.data);
+                    vm.todoList = res.data;
+                })
+                .catch(function (err) {
+                    console.log("GET ERR", err);
+                    alert(err.response.status + " " + err.response.statusText);
+                })
+        },
+    },
+
+}).mount('#app')
+</script>
 {% endblock %}
