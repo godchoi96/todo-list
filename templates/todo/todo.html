@@ -68,9 +68,9 @@
         </div>
 
         <ul class="todoList">
-            <li v-for="(todo, index) in todoList">
-                <span>[[ todo.name ]]:: [[ todo.todo ]]</span>
-                <span class="removeBtn" v-on:click="remove_todo(todo, index)">x</span>
+            <li v-for="(todos, id) in todoList">
+                <span>[[ todos.name ]]:: [[ todos.todo ]]</span>
+                <span class="removeBtn" v-on:click="remove_todo(todos, id)">x</span>
             </li>
         </ul>
 
@@ -83,9 +83,6 @@
 
 <script>
 Vue.createApp({
-    // compilerOptions: {
-    //     delimiters: ["[[", "]]"]
-    // },
     delimiters: ["[[", "]]"],
 
     data() {
@@ -108,12 +105,25 @@ Vue.createApp({
             axios.get('/api/todo/list/')
                 .then(function (res) {
                     console.log("GET RES", res);
-                    // res.data.reverse();
-                    // console.log(res.data);
+                    console.log(res.data);
                     vm.todoList = res.data;
                 })
                 .catch(function (err) {
                     console.log("GET ERR", err);
+                    alert(err.response.status + " " + err.response.statusText);
+                })
+        },
+        remove_todo: function (todos, id) {
+            console.log("remove_todo()...");
+
+            var vm = this;
+            axios.delete('/api/todo/' + todos.id + '/delete/')
+                .then(function (res){
+                    console.log("DELETE RES", res);
+                    vm.todoList.splice(id, 1);
+                })
+                .catch(function (err) {
+                    console.log("DELETE ERR", err);
                     alert(err.response.status + " " + err.response.statusText);
                 })
         },
