@@ -63,8 +63,8 @@
         <div class="inputBox">
             <input class="name" type="text" placeholder="name ..." v-model.trim="name">
             <input class="item" type="text" placeholder="type anything welcomed ..."
-                   v-model.trim="todo" v-on:keyup.enter="add_todo()">
-            <button v-on:click="add_todo()" class="btn btn-primary btn-sm ms-3">ADD</button>
+                   v-model.trim="todo" v-on:keyup.enter="created_todo()">
+            <button v-on:click="created_todo()" class="btn btn-primary btn-sm ms-3">ADD</button>
         </div>
 
         <ul class="todoList">
@@ -113,8 +113,27 @@ Vue.createApp({
                     alert(err.response.status + " " + err.response.statusText);
                 })
         },
+        created_todo: function () {
+            console.log("created_todo()...");
+
+            var vm = this;
+            var postData = {name: this.name, todo: this.todo};
+            axios.post('/api/todo/create/', postData)
+                .then(function (res) {
+                    console.log("POST RES", res);
+                    vm.todoList.push({id: res.data.id, name: res.data.name, todo: res.data.todo});
+                })
+                .catch(function (err) {
+                    console.log("POST ERR", err);
+                    alert(err.response.status + " " + err.response.statusText);
+                })
+            this.name = this.todo = '';
+        },
+
         remove_todo: function (todos, id) {
             console.log("remove_todo()...");
+
+            if (confirm('Are you sure "delete message?"') === false) return;
 
             var vm = this;
             axios.delete('/api/todo/' + todos.id + '/delete/')
