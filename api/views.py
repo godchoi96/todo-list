@@ -62,4 +62,4 @@ class CreateAPIView(CreateView):
         return JsonResponse(data=createdTodo, status=201)
 
     def form_invalid(self, form):
-        return JsonResponse(data=form.erros, status=400)
+        return JsonResponse(data=form.errors, status=400)
